@@ -1,0 +1,87 @@
+class Player
+  require_relative "gameplay_actions"
+
+  include GameplayActions
+
+  attr_accessor :result, :split_score, :hand
+  attr_reader :name, :split_hand
+  attr_writer :score
+
+  class << self
+    attr_writer :players
+
+    def players
+      @players ||= []
+    end
+  end
+
+  def initialize(name = "Guest")
+    @name = name
+    @hand = []
+    @total = 0
+    @split_hand = []
+    Player.players.push(self)
+  end
+
+  def request_action
+    while true
+      show_hand
+      show_score
+      break if score > 21
+      puts "#{name.chomp}, what would you like to do? (enter 'hit', 'stand', 'split', or 'double down')"
+      action = gets.to_s.chomp
+      case action
+      when "hit"
+        hit
+      when "split"
+        if @split_hand.any?
+          puts "You can only split once."
+        elsif @hand.size == 2
+          first_card = @hand.first.chop
+          second_card = @hand.last.chop
+          if first_card == second_card
+            split_cards
+          elsif %w(J Q K 10).include?(first_card)
+            if %w(J Q K 10).include?(second_card)
+              split_cards
+            end
+          else 
+            puts "You cannot split that hand."
+          end
+        else
+          puts "You cannot split that hand."
+        end
+      when "double down"
+        if @hand.size == 2
+          hit
+          show_hand
+          puts "#{name.chomp}, your final score is #{score}."
+          break
+        else
+          puts "You cannot double down with that hand."
+        end
+      when "stand"
+        puts "#{name.chomp}, your final score is #{score}."
+        break
+      else
+        puts "That is not a valid action."
+      end
+    end
+  end
+
+  def split_cards
+    card = @hand.pop
+    @split_hand.push(card)
+  end
+
+  def determine_better_hand
+    case
+    when self.score > 21
+      self.score = self.split_score
+    when self.split_score > self.score
+      if self.split_score <= 21
+        self.score = self.split_score
+      end
+    end
+  end
+end
