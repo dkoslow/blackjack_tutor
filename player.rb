@@ -1,5 +1,6 @@
 class Player
   require_relative "gameplay_actions"
+  require_relative "tutor"
 
   include GameplayActions
 
@@ -27,9 +28,10 @@ class Player
     while true
       show_hand
       show_score
-      break if score > 21
+      break if score > 20
       puts "#{name.chomp}, what would you like to do? (enter 'hit', 'stand', 'split', or 'double down')"
       action = gets.to_s.chomp
+      correct_action?(action)
       case action
       when "hit"
         hit
@@ -82,6 +84,15 @@ class Player
       if self.split_score <= 21
         self.score = self.split_score
       end
+    end
+  end
+
+  def correct_action?(play)
+    correct_play = Tutor.correct_play(self)
+    if play == correct_play
+      puts "Correct play!"
+    else
+      puts "Incorrect play. Correct play was #{correct_play}."
     end
   end
 end
