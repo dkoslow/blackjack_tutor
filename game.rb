@@ -34,6 +34,7 @@ class Game
 
     def deal_starting_hands
       Player.players.each { |player| player.clear_hand }
+      Player.players.each { |player| player.clear_split_hand }
       Dealer.clear_hand
       2.times do
         Player.players.each { |player| player.hit }
@@ -51,7 +52,9 @@ class Game
         player.request_action
         if player.split_hand.any?
           player.split_score = player.score
+          previous_hand = player.hand
           player.hand = player.split_hand
+          player.split_hand = previous_hand
           player.request_action
           player.determine_better_hand
         end
@@ -69,11 +72,29 @@ class Game
             player.result = "#{player.name.chomp}, you lost with a score of #{player.score}."
           else
             player.result = "#{player.name.chomp}, you won with a score of #{player.score}!"
+            player.check_for_blackjack
           end
         when player.score > Dealer.score
           player.result = "#{player.name.chomp}, you won with a score of #{player.score}!"
+          player.check_for_blackjack
         when player.score == Dealer.score
-          player.result = "#{player.name.chomp}, you pushed with a score of #{player.score}."
+          if player.score != 21
+            player.result = "#{player.name.chomp}, you pushed with a score of #{player.score}."
+          else
+            if player.hand.count == 2
+              if Dealer.hand.count == 2
+                player.result = "#{player.name.chomp}, you pushed with a score of blackjack."
+              else
+                player.result = "#{player.name.chomp}, you won with a score of blackjack!"
+              end
+            else
+              if Dealer.hand.count == 2
+                player.result = "#{player.name.chomp}, you lost with a score of #{player.score}."
+              else
+                player.result = "#{player.name.chomp}, you pushed with a score of #{player.score}."
+              end
+            end
+          end
         end
         puts "#{player.result}"
       end

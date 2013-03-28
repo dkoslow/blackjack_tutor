@@ -29,7 +29,7 @@ class Tutor
       end
     when ["5","5"]
       if ["2","3","4","5","6","7","8","9"].include?(dealer_upcard)
-        "double_down"
+        "double down"
       else
         "hit"
       end
@@ -57,37 +57,37 @@ class Tutor
       "split"
     when (["A","2"] || ["2","A"])
       if ["5","6"].include?(dealer_upcard)
-        "double_down"
+        "double down"
       else
         "hit"
       end
     when (["A","3"] || ["3","A"])
       if ["5","6"].include?(dealer_upcard)
-        "double_down"
+        "double down"
       else
         "hit"
       end
     when (["A","4"] || ["4","A"])
       if ["4","5","6"].include?(dealer_upcard)
-        "double_down"
+        "double down"
       else
         "hit"
       end
     when (["A","5"] || ["5","A"])
       if ["4","5","6"].include?(dealer_upcard)
-        "double_down"
+        "double down"
       else
         "hit"
       end
     when (["A","6"] || ["6","A"])
       if ["3","4","5","6"].include?(dealer_upcard)
-        "double_down"
+        "double down"
       else
         "hit"
       end
     when (["A","7"] || ["7","A"])
       if ["3","4","5","6"].include?(dealer_upcard)
-        "double_down"
+        "double down"
       elsif ["2","7","8"].include?(dealer_upcard)
         "stand"
       else
@@ -105,13 +105,13 @@ class Tutor
         "hit"
       when 9
         if ["3","4","5","6"].include?(dealer_upcard)
-          "double_down"
+          "double down"
         else
           "hit"
         end
       when 10
         if ["2","3","4","5","6","7","8","9"].include?(dealer_upcard)
-          "double_down"
+          "double down"
         else
           "hit"
         end
@@ -119,7 +119,7 @@ class Tutor
         if ["A"].include?(dealer_upcard)
           "hit"
         else
-          "double_down"
+          "double down"
         end
       when 12
         if ["4","5","6"].include?(dealer_upcard)

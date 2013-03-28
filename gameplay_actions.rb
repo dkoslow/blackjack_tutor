@@ -22,8 +22,10 @@ module GameplayActions
     total
     if @ace_count > 0
       if @total > 21
-        @total -= 10
-        @ace_count -= 1
+        until (@ace_count == 0 || @total <= 21)
+          @total -= 10
+          @ace_count -= 1
+        end
       end
     end
     @total

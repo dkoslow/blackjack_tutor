@@ -4,8 +4,8 @@ class Player
 
   include GameplayActions
 
-  attr_accessor :result, :split_score, :hand
-  attr_reader :name, :split_hand
+  attr_accessor :result, :split_score, :hand, :split_hand
+  attr_reader :name
   attr_writer :score
 
   class << self
@@ -76,13 +76,34 @@ class Player
     @split_hand.push(card)
   end
 
+  def clear_split_hand
+    @split_hand = []
+    @split_score = nil
+  end
+
   def determine_better_hand
     case
     when self.score > 21
+      self.hand = self.split_hand
       self.score = self.split_score
     when self.split_score > self.score
       if self.split_score <= 21
+        self.hand = self.split_hand
         self.score = self.split_score
+      end
+    when self.split_score == self.score
+      if self.score == 21
+        if self.split_hand.count == 2
+          self.hand = self.split_hand
+        end
+      end
+    end
+  end
+
+  def check_for_blackjack
+    if self.score == 21
+      if self.hand.count == 2
+        self.result = "#{self.name.chomp}, you won with a score of blackjack!"
       end
     end
   end
