@@ -95,6 +95,12 @@ class Tutor
       end
     else
       case player.score
+      when 2
+        "hit"
+      when 3
+        "hit"
+      when 4
+        "hit"
       when 5
         "hit"
       when 6
@@ -104,22 +110,22 @@ class Tutor
       when 8
         "hit"
       when 9
-        if ["3","4","5","6"].include?(dealer_upcard)
+        if (["3","4","5","6"].include?(dealer_upcard) && player.hand.count == 2)
           "double down"
         else
           "hit"
         end
       when 10
-        if ["2","3","4","5","6","7","8","9"].include?(dealer_upcard)
+        if (["2","3","4","5","6","7","8","9"].include?(dealer_upcard) && player.hand.count == 2)
           "double down"
         else
           "hit"
         end
       when 11
-        if ["A"].include?(dealer_upcard)
-          "hit"
-        else
+        if player.hand.count == 2
           "double down"
+        else
+          "hit"
         end
       when 12
         if ["4","5","6"].include?(dealer_upcard)
