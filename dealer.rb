@@ -11,7 +11,11 @@ class Dealer
     end
 
     def show_starting_hand
-      print "Dealer's hand is [#{hand.first}, X].\n"
+      if Game.test_mode == true
+        show_hand
+      else
+        puts "Dealer's hand is [#{hand.first}, X]."
+      end
     end
 
     def play_game

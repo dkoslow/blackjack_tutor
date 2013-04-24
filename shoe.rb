@@ -37,9 +37,14 @@ class Shoe
       @deck = []
     end
 
-    def deal_card
-      create_shoe if Shoe.cards.size < 1
-      @cards.shift
+    def deal_card(name)
+      if Game.test_mode == true
+        puts "What card would you like to deal for #{name.chomp}?"
+        card = gets.chomp
+      else
+        create_shoe if Shoe.cards.size < 1
+        @cards.shift
+      end
     end
   end
 end

@@ -3,18 +3,29 @@ class Game
   require_relative "dealer"
 
   class << self
-    attr_accessor :num_players
+    attr_accessor :num_players, :test_mode
 
     def play_round
+      set_game_mode
       set_players
       deal_starting_hands
       begin_gameplay
       evaluate_outcome
     end
 
+    def set_game_mode
+      if Player.players.count < 1
+        puts "Would you like to play in test mode(yes/no)? "
+        mode = gets.chomp
+        if mode == "yes"
+          @test_mode = true
+        end
+      end
+    end
+
     def set_players
       @num_players ||= set_num_players
-      Player.players.count > 0 ? Player.players : Player.players = set_player_names
+      Player.players.count > 0 ? Player.players : set_player_names
     end
 
     def set_num_players

@@ -2,7 +2,7 @@ module GameplayActions
   require_relative "shoe"
 
   def hit
-    card = Shoe.deal_card
+    card = Shoe.deal_card(self.name)
     @hand.push(card)
   end
 
@@ -11,11 +11,11 @@ module GameplayActions
   end
 
   def show_hand
-    print "#{name.chomp}'s hand is #{hand}.\n"
+    puts "#{name.chomp}'s hand is #{hand}."
   end
 
   def show_score
-    print "#{name.chomp}'s score is #{score}.\n"
+    puts "#{name.chomp}'s score is #{score}."
   end
 
   def score
