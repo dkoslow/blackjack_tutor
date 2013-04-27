@@ -8,6 +8,7 @@ class Game
     def play_round
       set_game_mode
       set_players
+      request_bets
       deal_starting_hands
       begin_gameplay
       evaluate_outcome
@@ -34,11 +35,10 @@ class Game
     end
 
     def set_player_names
-      count = 1
-      @num_players.times do |player|
-        puts "Enter player #{count} name:"
-        Player.new(gets)
-        count += 1
+      @num_players.times do |i|
+        puts "Enter player #{i + 1} name:"
+        name = gets.chomp
+        Player.new(name)
       end
       Player.players
     end
@@ -62,52 +62,20 @@ class Game
       Player.players.each do |player|
         player.request_action
         if player.split_hand.any?
-          player.split_score = player.score
-          previous_hand = player.hand
-          player.hand = player.split_hand
-          player.split_hand = previous_hand
+          player.flip_hands
           player.request_action
-          player.determine_better_hand
         end
       end
       Dealer.play_game
     end
 
+    def request_bets
+      Player.players.each { |player| player.request_bet }
+    end
+
     def evaluate_outcome
       Player.players.each do |player|
-        case 
-        when player.score > 21
-          player.result = "#{player.name.chomp}, you busted with a score of #{player.score}. You lose."
-        when player.score < Dealer.score
-          if Dealer.score <= 21
-            player.result = "#{player.name.chomp}, you lost with a score of #{player.score}."
-          else
-            player.result = "#{player.name.chomp}, you won with a score of #{player.score}!"
-            player.check_for_blackjack
-          end
-        when player.score > Dealer.score
-          player.result = "#{player.name.chomp}, you won with a score of #{player.score}!"
-          player.check_for_blackjack
-        when player.score == Dealer.score
-          if player.score != 21
-            player.result = "#{player.name.chomp}, you pushed with a score of #{player.score}."
-          else
-            if player.hand.count == 2
-              if Dealer.hand.count == 2
-                player.result = "#{player.name.chomp}, you pushed with a score of blackjack."
-              else
-                player.result = "#{player.name.chomp}, you won with a score of blackjack!"
-              end
-            else
-              if Dealer.hand.count == 2
-                player.result = "#{player.name.chomp}, you lost with a score of #{player.score}."
-              else
-                player.result = "#{player.name.chomp}, you pushed with a score of #{player.score}."
-              end
-            end
-          end
-        end
-        puts "#{player.result}"
+        player.print_result
       end
     end
   end

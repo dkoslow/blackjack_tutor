@@ -39,7 +39,7 @@ class Shoe
 
     def deal_card(name)
       if Game.test_mode == true
-        puts "What card would you like to deal for #{name.chomp}?"
+        puts "What card would you like to deal for #{name}?"
         card = gets.chomp
       else
         create_shoe if Shoe.cards.size < 1

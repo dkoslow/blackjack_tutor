@@ -11,11 +11,11 @@ module GameplayActions
   end
 
   def show_hand
-    puts "#{name.chomp}'s hand is #{hand}."
+    puts "#{name}'s hand is #{hand}."
   end
 
   def show_score
-    puts "#{name.chomp}'s score is #{score}."
+    puts "#{name}'s score is #{score}."
   end
 
   def score
