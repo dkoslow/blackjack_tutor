@@ -1,7 +1,9 @@
 class Shoe
+  require_relative "card"
   class << self
 
     def create_shoe
+      @cards = []
       num_decks.times do
         create_deck
         @cards.push(@deck)
@@ -14,8 +16,7 @@ class Shoe
     end
 
     def set_num_decks
-      puts "Enter number of decks:"
-      gets.to_i || 6
+      Console.get_deck_number
     end
 
     def cards
@@ -24,11 +25,9 @@ class Shoe
 
     def create_deck
       clear_deck
-      suits = %w(s d h c)
-      values = %w(A 2 3 4 5 6 7 8 9 10 J Q K)
-      values.each do |value|
-        suits.each do |suit|
-          @deck.push(value + suit)
+      Card::VALUES.each do |value|
+        Card::SUITS.each do |suit|
+          @deck << Card.new(value, suit)
         end
       end
     end
@@ -37,10 +36,10 @@ class Shoe
       @deck = []
     end
 
-    def deal_card(name)
+    def deal_card(player_name)
       if Game.test_mode == true
-        puts "What card would you like to deal for #{name}?"
-        card = gets.chomp
+        card_name = Console.set_card(player_name)
+        Card.new(card_name.chop, card_name.reverse[0])
       else
         create_shoe if Shoe.cards.size < 1
         @cards.shift
