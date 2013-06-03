@@ -44,53 +44,38 @@ class Player
 
   def request_action
     until !current_hand
-      while true
-        Console.print_hand_status(self)
-        Console.print_finances(self)
-        if current_hand.score > 20
-          current_hand.finished = true
-          break
-        end
+      Console.print_hand_status(self)
+      Console.print_finances(self)
+      if current_hand.score > 20
+        current_hand.finished = true
+      else
         action = Console.get_action(self)
-        correct_action?(action)
-        case action
-        when "hit"
-          hit(current_hand)
-        when "split"
-          if @money < current_hand.bet
-            Console.print_lack_of_money_warning(action)
-          elsif current_hand.cards.count == 2
-            if current_hand.cards.first.value == current_hand.cards.last.value
-              split_hand
-            else 
-              Console.print_illegal_action_warning(action)
-            end
-          else
-            Console.print_illegal_action_warning(action)
-          end
-        when "double down"
-          if @money < current_hand.bet
-            Console.print_lack_of_money_warning(action)
-          elsif current_hand.cards.count == 2
-            @money -= current_hand.bet
-            current_hand.bet *= 2
-            Console.print_finances(self)
-            hit(current_hand)
-            Console.show_hand(self)
-            Console.print_final_score(name, current_hand.score)
-            current_hand.finished = true
-            break
-          else
-            Console.print_illegal_action_warning(action)
-          end
-        when "stand"
-          Console.print_final_score(name, current_hand.score)
-          current_hand.finished = true
-          break
-        else
-          Console.print_invalid_action_warning
-        end
+        process_action(action)
       end
+    end
+  end
+
+  def process_action(action)
+    correct_action?(action)
+    case action
+    when "hit"
+      hit(current_hand)
+    when "split"
+      handle_split
+    when "double down"
+      if @money < current_hand.bet
+        Console.print_lack_of_money_warning(action)
+      elsif current_hand.cards.count == 2
+        handle_double_down
+        current_hand.finished = true
+      else
+        Console.print_illegal_action_warning(action)
+      end
+    when "stand"
+      Console.print_final_score(name, current_hand.score)
+      current_hand.finished = true
+    else
+      Console.print_invalid_action_warning
     end
   end
 
@@ -134,6 +119,29 @@ class Player
       end
     end
     result
+  end
+
+  def handle_split
+    if @money < current_hand.bet
+      Console.print_lack_of_money_warning(action)
+    elsif current_hand.cards.count == 2
+      if current_hand.cards.first.value == current_hand.cards.last.value
+        split_hand
+      else
+        Console.print_illegal_action_warning(action)
+      end
+    else
+      Console.print_illegal_action_warning(action)
+    end
+  end
+
+  def handle_double_down
+    @money -= current_hand.bet
+    current_hand.bet *= 2
+    Console.print_finances(self)
+    hit(current_hand)
+    Console.show_hand(self)
+    Console.print_final_score(name, current_hand.score)
   end
 
   def check_for_blackjack(hand)
